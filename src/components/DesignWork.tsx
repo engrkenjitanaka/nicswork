@@ -145,6 +145,7 @@ function GalleryDialog({
       title={collection.title}
       subtitle={`${i + 1} / ${shots.length}`}
       onClose={onClose}
+      panelClassName="h-[min(86dvh,800px)] w-[min(94vw,1040px)]"
       action={
         <a
           href={collection.driveUrl}
@@ -174,7 +175,7 @@ function GalleryDialog({
       }
     >
       <div
-        className="relative flex min-h-0 flex-1 items-center justify-center p-4 sm:p-10"
+        className="relative flex min-h-0 flex-1 items-center justify-center p-3 sm:p-8"
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
         onTouchEnd={(e) => {
           if (touchX.current === null) return;

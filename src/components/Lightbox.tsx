@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { ChevronIcon, CloseIcon } from "./icons";
+
+/** Must match the .is-closing animation duration in globals.css. */
+const EXIT_MS = 300;
 
 /**
  * The page's one modal shell, shared by the video player and the print
- * gallery. A native <dialog> so focus trapping, Esc and the backdrop are the
- * platform's job, not ours.
+ * gallery. A native <dialog>, so focus trapping, Esc and the top layer are the
+ * platform's job; the open/close animation is CSS via @starting-style.
  */
 export function LightboxFrame({
   label,
@@ -14,6 +17,7 @@ export function LightboxFrame({
   subtitle,
   action,
   footer,
+  panelClassName = "",
   onClose,
   children,
 }: {
@@ -22,51 +26,80 @@ export function LightboxFrame({
   subtitle?: string;
   action?: React.ReactNode;
   footer?: React.ReactNode;
+  panelClassName?: string;
   onClose: () => void;
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  const closing = useRef(false);
 
   useEffect(() => {
     const el = ref.current;
     if (el && !el.open) el.showModal();
   }, []);
 
+  /**
+   * Play the exit before anything leaves: the dialog stays open and marked
+   * `.is-closing` for the length of the animation, then closes and unmounts.
+   */
+  const requestClose = useCallback(() => {
+    const el = ref.current;
+    if (!el || closing.current) return;
+    closing.current = true;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.classList.add("is-closing");
+    window.setTimeout(() => {
+      el.close();
+      onClose();
+    }, reduced ? 0 : EXIT_MS);
+  }, [onClose]);
+
   return (
     <dialog
       ref={ref}
-      onClose={onClose}
-      onCancel={onClose}
       aria-label={label}
-      className="m-0 h-full max-h-none w-full max-w-none bg-ink/97 p-0 text-chalk backdrop:bg-ink/85 open:flex open:flex-col"
+      className="lightbox"
+      onCancel={(e) => {
+        e.preventDefault(); // let the animation run instead of a hard close
+        requestClose();
+      }}
+      onClose={requestClose}
+      onClick={(e) => {
+        // Only a click on the backdrop area itself, never inside the panel.
+        if (e.target === ref.current) requestClose();
+      }}
     >
-      <div className="flex items-center justify-between gap-4 border-b border-line px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
-        <div className="min-w-0">
-          <h3 className="truncate text-[0.68rem] uppercase tracking-[0.2em] text-chalk">
-            {title}
-          </h3>
-          {subtitle && (
-            <p className="mt-1 truncate text-[0.7rem] font-light text-mute">
-              {subtitle}
-            </p>
-          )}
+      <div
+        className={`lightbox-panel flex max-h-[92dvh] max-w-[95vw] flex-col overflow-hidden rounded-2xl border border-chalk/15 bg-panel/45 shadow-[0_40px_120px_-30px_rgb(0_0_0/0.95)] backdrop-blur-2xl ${panelClassName}`}
+      >
+        <div className="flex shrink-0 items-center justify-between gap-4 border-b border-chalk/10 px-4 py-3.5 sm:px-6">
+          <div className="min-w-0">
+            <h3 className="truncate text-[0.66rem] uppercase tracking-[0.2em] text-chalk">
+              {title}
+            </h3>
+            {subtitle && (
+              <p className="mt-1 truncate text-[0.7rem] font-light text-mute">
+                {subtitle}
+              </p>
+            )}
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            {action}
+            <button
+              type="button"
+              onClick={requestClose}
+              aria-label="Close"
+              className="grid h-9 w-9 cursor-pointer place-items-center rounded-full border border-chalk/20 text-mute transition-colors duration-300 hover:border-amber hover:text-amber"
+            >
+              <CloseIcon className="h-4.5 w-4.5" />
+            </button>
+          </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-2">
-          {action}
-          <button
-            type="button"
-            onClick={() => ref.current?.close()}
-            aria-label="Close"
-            className="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-line text-mute transition-colors hover:border-chalk hover:text-chalk"
-          >
-            <CloseIcon className="h-5 w-5" />
-          </button>
-        </div>
+        {children}
+        {footer}
       </div>
-
-      {children}
-      {footer}
     </dialog>
   );
 }
@@ -85,8 +118,8 @@ export function LightboxArrow({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`absolute top-1/2 z-10 grid h-11 w-11 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-line bg-ink/70 text-mute backdrop-blur-sm transition-colors hover:border-chalk hover:text-chalk ${
-        side === "left" ? "left-2 sm:left-6" : "right-2 sm:right-6"
+      className={`absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-chalk/20 bg-ink/50 text-mute backdrop-blur-md transition-colors duration-300 hover:border-amber hover:text-amber ${
+        side === "left" ? "left-2 sm:left-3" : "right-2 sm:right-3"
       }`}
     >
       <ChevronIcon className={`h-5 w-5 ${side === "right" ? "rotate-180" : ""}`} />

@@ -53,26 +53,26 @@ export function VideoGrid({
           subtitle={`${video.detail}   ·   ${(open ?? 0) + 1} / ${videos.length}`}
           onClose={() => setOpen(null)}
         >
-          <div
-            className="relative flex min-h-0 flex-1 items-center justify-center p-3 sm:p-8"
-            style={{ containerType: "size" }}
-          >
-            {/* The player is sized from the piece's own shape and centred, so a
-                9:16 cut is tall and a 16:9 cut is wide — never a thumbnail. */}
-            {/* Sized off whichever axis runs out first — cqh is the centring
-                box's own height — so the frame is always the piece's true
-                shape and YouTube never letterboxes inside black bars. */}
+          <div className="relative p-2 sm:p-3">
+            {/* Sized off whichever axis runs out first, so the frame is always
+                the piece's true shape and the panel hugs it. */}
             <div
-              style={{
-                aspectRatio: vertical ? "9 / 16" : "16 / 9",
-                width: vertical
-                  ? "min(100%, calc(100cqh * 9 / 16))"
-                  : "min(100%, 1120px, calc(100cqh * 16 / 9))",
-              }}
+              className="overflow-hidden rounded-xl bg-ink"
+              style={
+                vertical
+                  ? {
+                      aspectRatio: "9 / 16",
+                      height: "min(74dvh, calc(88vw * 16 / 9), 800px)",
+                    }
+                  : {
+                      aspectRatio: "16 / 9",
+                      width: "min(88vw, 1060px, calc(74dvh * 16 / 9))",
+                    }
+              }
             >
               <iframe
                 key={video.youtubeId}
-                className="h-full w-full rounded-sm bg-panel"
+                className="h-full w-full"
                 src={`https://www.youtube-nocookie.com/embed/${video.youtubeId}?autoplay=1&rel=0&playsinline=1`}
                 title={`${video.category} — ${video.detail}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
