@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-16T12:14:25.087700Z",
+  "title": "Design System: nicswork",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "background",
+        "displayName": "Screening Room",
+        "canonical": "oklch(12% 0.004 250)",
+        "tonalRamp": [
+          "oklch(15% 0.004 250)",
+          "oklch(25% 0.004 250)",
+          "oklch(35% 0.004 250)",
+          "oklch(45% 0.004 250)",
+          "oklch(58% 0.004 250)",
+          "oklch(70% 0.004 250)",
+          "oklch(82% 0.004 250)",
+          "oklch(95% 0.004 250)"
+        ]
+      },
+      "panel": {
+        "role": "surface",
+        "displayName": "One Step Up",
+        "canonical": "oklch(17% 0.004 250)",
+        "tonalRamp": [
+          "oklch(15% 0.004 250)",
+          "oklch(25% 0.004 250)",
+          "oklch(35% 0.004 250)",
+          "oklch(45% 0.004 250)",
+          "oklch(58% 0.004 250)",
+          "oklch(70% 0.004 250)",
+          "oklch(82% 0.004 250)",
+          "oklch(95% 0.004 250)"
+        ]
+      },
+      "line": {
+        "role": "border",
+        "displayName": "Hairline",
+        "canonical": "oklch(27% 0.006 250)",
+        "tonalRamp": [
+          "oklch(15% 0.006 250)",
+          "oklch(25% 0.006 250)",
+          "oklch(35% 0.006 250)",
+          "oklch(45% 0.006 250)",
+          "oklch(58% 0.006 250)",
+          "oklch(70% 0.006 250)",
+          "oklch(82% 0.006 250)",
+          "oklch(95% 0.006 250)"
+        ]
+      },
+      "chalk": {
+        "role": "foreground",
+        "displayName": "Chalk",
+        "canonical": "oklch(96% 0.003 70)",
+        "tonalRamp": [
+          "oklch(15% 0.003 70)",
+          "oklch(25% 0.003 70)",
+          "oklch(35% 0.003 70)",
+          "oklch(45% 0.003 70)",
+          "oklch(58% 0.003 70)",
+          "oklch(70% 0.003 70)",
+          "oklch(82% 0.003 70)",
+          "oklch(95% 0.003 70)"
+        ]
+      },
+      "mute": {
+        "role": "muted",
+        "displayName": "Muted Chalk",
+        "canonical": "oklch(66% 0.005 70)",
+        "tonalRamp": [
+          "oklch(15% 0.005 70)",
+          "oklch(25% 0.005 70)",
+          "oklch(35% 0.005 70)",
+          "oklch(45% 0.005 70)",
+          "oklch(58% 0.005 70)",
+          "oklch(70% 0.005 70)",
+          "oklch(82% 0.005 70)",
+          "oklch(95% 0.005 70)"
+        ]
+      },
+      "amber": {
+        "role": "accent",
+        "displayName": "Practical Amber",
+        "canonical": "oklch(76% 0.098 72)",
+        "tonalRamp": [
+          "oklch(15% 0.098 72)",
+          "oklch(25% 0.098 72)",
+          "oklch(35% 0.098 72)",
+          "oklch(45% 0.098 72)",
+          "oklch(58% 0.098 72)",
+          "oklch(70% 0.098 72)",
+          "oklch(82% 0.098 72)",
+          "oklch(95% 0.098 72)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Poppins Display",
+        "purpose": "The name only. Capped 6rem, tracking -0.04em."
+      },
+      "label": {
+        "displayName": "Poppins Tracked Caps",
+        "purpose": "Work categories and controls. Never an eyebrow above a heading."
+      },
+      "script": {
+        "displayName": "Sacramento",
+        "purpose": "Inherited lettering. Used exactly once, in the name lockup."
+      }
+    },
+    "shadows": [
+      {
+        "name": "print",
+        "value": "drop-shadow(0 14px 20px rgb(0 0 0 / 0.8))",
+        "purpose": "Follows a cut-out's alpha so the artwork's own edge casts it."
+      },
+      {
+        "name": "media",
+        "value": "0 22px 44px -24px rgba(0,0,0,0.95)",
+        "purpose": "Seats a video poster on the ground. Offset and blur, never a halo."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The page's only easing curve."
+      },
+      {
+        "name": "hero-sequence",
+        "value": "120ms \u2192 1040ms staggered",
+        "purpose": "The one animation that runs unprompted."
+      },
+      {
+        "name": "response",
+        "value": "300\u2013550ms",
+        "purpose": "Anything a person causes: fan, hover, open, confirm."
+      },
+      {
+        "name": "reveal",
+        "value": "700ms, stagger 70ms on --i",
+        "purpose": "Work sections only."
+      }
+    ],
+    "breakpoints": {
+      "sm": "640px",
+      "lg": "1024px",
+      "shell": "1280px"
+    },
+    "narrative": {
+      "northStar": "A reel, not a r\u00e9sum\u00e9.",
+      "keyCharacteristics": [
+        "Near-black ground with panels lifted exactly one step, never more",
+        "One warm accent, sampled from the practical LEDs in the hero photograph",
+        "Geometric sans throughout; capitals carry labels, never decoration",
+        "Work sits directly on the ground \u2014 no card chrome, no containers",
+        "Motion answers a person's action; exactly one sequence runs unprompted"
+      ],
+      "rules": [
+        {
+          "section": "Color",
+          "name": "The Practical Light Rule",
+          "body": "amber appears where the visitor acts and nowhere else. Never a separator, never a bullet, never decoration."
+        },
+        {
+          "section": "Color",
+          "name": "The Alpha Edge Rule",
+          "body": "Cut-out edges come from their own alpha via drop-shadow. Never box-shadow, which frames the tile box instead."
+        },
+        {
+          "section": "Typography",
+          "name": "The No-Eyebrow Rule",
+          "body": "No tracked label sits above a heading to introduce it."
+        },
+        {
+          "section": "Motion",
+          "name": "The One Sequence Rule",
+          "body": "Exactly one animation runs unprompted: the hero assembling on load."
+        },
+        {
+          "section": "Motion",
+          "name": "The Reachable Pause Rule",
+          "body": "Auto motion past five seconds carries a real pause button. Hover is not a control."
+        }
+      ],
+      "dos": [
+        "Let the work be the brightest thing in any viewport",
+        "Put media directly on the ground; use line for separation",
+        "Reserve amber for moments the visitor causes",
+        "Give every auto-running motion a control that works without a pointer",
+        "Keep body measure between 65 and 75 characters"
+      ],
+      "donts": [
+        "Don't box content into same-size cards of icon + label + text",
+        "Don't put a tracked label above a heading",
+        "Don't use amber as a bullet, divider, or ornament",
+        "Don't add a second unprompted animation above the fold",
+        "Don't draw a frame around a cut-out; let its alpha be the edge",
+        "Don't let an interface element out-brighten the work beside it"
+      ]
+    }
+  }
+}

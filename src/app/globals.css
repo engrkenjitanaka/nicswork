@@ -1,0 +1,247 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------- tokens */
+
+@theme {
+  --color-ink: #08090a;
+  --color-panel: #101113;
+  --color-panel-2: #17191c;
+  --color-line: #26282c;
+  --color-chalk: #f4f3f1;
+  --color-mute: #9b9894;
+  --color-amber: #e0a95f;
+
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-sacramento), ui-serif, cursive;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: dark;
+  /* Fluid display scale. Capped at 6rem per the craft floor. */
+  --step-display: clamp(2.75rem, 1.2rem + 7.6vw, 6rem);
+  --step-h2: clamp(1.5rem, 1.1rem + 1.9vw, 2.5rem);
+  --shell: 1280px;
+}
+
+/* ------------------------------------------------- base + browser chrome */
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+  /* Nav pill is fixed; anchors must not land underneath it. */
+  scroll-padding-top: 6.5rem;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-chalk);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+a {
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: from-font;
+}
+
+* {
+  scrollbar-color: var(--color-line) transparent;
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 99px;
+  border: 3px solid var(--color-ink);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #3a3d42;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+/* Wide-tracked capitals — the incumbent site's label voice, kept. */
+.tracked {
+  text-transform: uppercase;
+  letter-spacing: 0.34em;
+  font-weight: 400;
+}
+
+/* -------------------------------------- the one authored moment: the hero */
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(1.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes wipeUp {
+  from {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(0.6em);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(-20% 0 -20% 0);
+    transform: none;
+  }
+}
+
+@keyframes ruleOut {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.seq {
+  animation: riseIn 0.9s var(--ease-out-expo) both;
+}
+.seq-name {
+  animation: wipeUp 1.15s var(--ease-out-expo) both;
+}
+.seq-rule {
+  transform-origin: left;
+  animation: ruleOut 1s var(--ease-out-expo) both;
+}
+
+/* ------------------------------------------- response motion + reveals */
+
+/* Content stays visible unless scripting can animate it back in, so a
+   no-JS or failed-hydration render is never a blank page. */
+@media (scripting: enabled) {
+  .reveal > * {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+.reveal.shown > * {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s var(--ease-out-expo),
+    transform 0.7s var(--ease-out-expo);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+
+/* ------------------------------------------------------------- the stack */
+
+/* Each collection is a physical pile of prints. Hovering spreads the top of
+   the pile; the whole tile is one button that opens the gallery. */
+.stack {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--ratio);
+}
+
+.stack-card {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--rot)) translate(var(--tx), var(--ty));
+  transition:
+    transform 0.55s var(--ease-out-expo),
+    filter 0.55s var(--ease-out-expo);
+  /* drop-shadow follows the PNG's alpha, so the print's own edge casts the
+     shadow. A box-shadow here would outline the tile box instead. */
+  filter: brightness(var(--dim)) drop-shadow(0 14px 20px rgb(0 0 0 / 0.8));
+}
+
+/* A fanned pile spreads wider than the gap between columns, so the tile being
+   opened has to sit above its neighbours rather than under them. */
+.stack-tile {
+  position: relative;
+  z-index: 0;
+}
+
+@media (hover: hover) {
+  .stack-tile:hover,
+  .stack-tile:focus-visible {
+    z-index: 20;
+  }
+
+  .stack-tile:hover .stack-card,
+  .stack-tile:focus-visible .stack-card {
+    transform: rotate(var(--rot-open)) translate(var(--tx-open), var(--ty-open));
+    filter: brightness(1);
+  }
+}
+
+/* ------------------------------------------------------- capability rail */
+
+@keyframes railScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.rail {
+  display: flex;
+  width: max-content;
+  animation: railScroll 42s linear infinite;
+}
+.rail-wrap:hover .rail {
+  animation-play-state: paused;
+}
+.rail-wrap[data-paused="true"] .rail {
+  animation-play-state: paused;
+}
+
+/* --------------------------------------------------------------- a11y */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .reveal > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .stack-card {
+    transform: rotate(var(--rot-open)) translate(var(--tx-open), var(--ty-open));
+    filter: brightness(1);
+  }
+}
