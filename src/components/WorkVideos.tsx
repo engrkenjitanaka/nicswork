@@ -6,10 +6,12 @@ export function WorkVideos() {
     <section id="work" className="relative py-24 sm:py-32">
       {/* The world's one light source, spent once: the hero's practical LEDs
           spill past the fold so the photograph and the dark page read as one
-          room rather than two panels. */}
+          room rather than two panels. The centre sits mid-box, not on its top
+          edge — centred at 0% the gradient starts at full strength exactly
+          where the element begins and draws a hard line across the photo. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -top-48 h-96 bg-[radial-gradient(58%_100%_at_76%_0%,rgba(224,169,95,0.13),rgba(224,169,95,0.04)_45%,transparent_72%)]"
+        className="pointer-events-none absolute inset-x-0 -top-56 h-[28rem] bg-[radial-gradient(52%_50%_at_76%_50%,rgba(224,169,95,0.13),rgba(224,169,95,0.04)_45%,transparent_76%)]"
       />
       <div className="shell relative">
         <h2
