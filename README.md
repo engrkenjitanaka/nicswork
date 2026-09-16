@@ -42,8 +42,10 @@ src/
   components/
     Hero.tsx              ← first viewport; the one authored load sequence
     Nav.tsx               ← floating pill, scroll-spy active marker
-    WorkVideos.tsx        ← the 10 video embeds
-    LiteYouTube.tsx       ← click-to-load facade (no iframe until play)
+    WorkVideos.tsx        ← the two video sections
+    VideoGrid.tsx         ← poster grid + centred modal player
+    LiteYouTube.tsx       ← poster only; never mounts an iframe
+    Lightbox.tsx          ← the shared modal shell (native <dialog>)
     DesignWork.tsx        ← collection stacks + full-screen gallery
     Capabilities.tsx      ← the scrolling rail
     About.tsx / Contact.tsx
@@ -150,7 +152,9 @@ Both routes are statically prerendered, so the whole site serves from the CDN.
   that is what Google and every link preview showed. Replaced.
 - **A nav link pointed at `https://home/`.** Removed.
 - **No image had alt text.** All 47 do now.
-- **All 10 YouTube iframes loaded on arrival.** Now none load until clicked.
+- **All 10 YouTube iframes loaded on arrival.** Now none load until clicked,
+  and clicking opens a centred full-screen player instead of running the video
+  in a small tile. Closing it unmounts the iframe, so the video actually stops.
 - **Work was only reachable through Google Drive.** It now opens in a
   full-screen gallery on the site; Drive remains as the complete archive.
 - **The page hijacked scrolling** inside a fixed 1512px canvas, which broke

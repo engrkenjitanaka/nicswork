@@ -1,6 +1,5 @@
 import { verticalVideos, horizontalVideos } from "@/content";
-import { LiteYouTube } from "./LiteYouTube";
-import { Reveal } from "./Reveal";
+import { VideoGrid } from "./VideoGrid";
 
 export function WorkVideos() {
   return (
@@ -24,23 +23,19 @@ export function WorkVideos() {
           until you press play.
         </p>
 
-        <Reveal className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-6 lg:gap-x-4">
-          {verticalVideos.map((v, i) => (
-            <div key={v.youtubeId} style={{ "--i": i } as React.CSSProperties}>
-              <LiteYouTube video={v} orientation="vertical" />
-            </div>
-          ))}
-        </Reveal>
+        <VideoGrid
+          videos={verticalVideos}
+          orientation="vertical"
+          className="mt-14 grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-6 lg:gap-x-4"
+        />
 
         <h3 className="tracked mt-24 text-[0.68rem] text-mute">Long form</h3>
 
-        <Reveal className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:gap-x-10">
-          {horizontalVideos.map((v, i) => (
-            <div key={v.youtubeId} style={{ "--i": i } as React.CSSProperties}>
-              <LiteYouTube video={v} orientation="horizontal" />
-            </div>
-          ))}
-        </Reveal>
+        <VideoGrid
+          videos={horizontalVideos}
+          orientation="horizontal"
+          className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:gap-x-10"
+        />
       </div>
     </section>
   );

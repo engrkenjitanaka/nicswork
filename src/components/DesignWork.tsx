@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { collections, imagesOf, type Collection } from "@/content";
 import { Reveal } from "./Reveal";
-import { ChevronIcon, CloseIcon, ExternalIcon } from "./icons";
+import { ExternalIcon } from "./icons";
+import { LightboxArrow, LightboxFrame } from "./Lightbox";
 
 type Shot = { src: string; alt: string };
 
@@ -119,7 +120,6 @@ function GalleryDialog({
   startIndex: number;
   onClose: () => void;
 }) {
-  const ref = useRef<HTMLDialogElement>(null);
   const touchX = useRef<number | null>(null);
   const [i, setI] = useState(startIndex);
 
@@ -127,11 +127,6 @@ function GalleryDialog({
     (step: number) => setI((n) => (n + step + shots.length) % shots.length),
     [shots.length],
   );
-
-  useEffect(() => {
-    const el = ref.current;
-    if (el && !el.open) el.showModal();
-  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -145,44 +140,39 @@ function GalleryDialog({
   const shot = shots[i];
 
   return (
-    <dialog
-      ref={ref}
+    <LightboxFrame
+      label={`${collection.title} gallery`}
+      title={collection.title}
+      subtitle={`${i + 1} / ${shots.length}`}
       onClose={onClose}
-      onCancel={onClose}
-      aria-label={`${collection.title} gallery`}
-      className="m-0 h-full max-h-none w-full max-w-none bg-ink/97 p-0 text-chalk backdrop:bg-ink/85 open:flex open:flex-col"
+      action={
+        <a
+          href={collection.driveUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden items-center gap-2 rounded-full border border-line px-4 py-2 text-[0.68rem] uppercase tracking-[0.14em] text-mute transition-colors hover:border-amber hover:text-amber sm:inline-flex"
+        >
+          Full archive
+          <ExternalIcon className="h-3.5 w-3.5" />
+        </a>
+      }
+      footer={
+        <div className="flex justify-center gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
+          {shots.map((s, n) => (
+            <button
+              key={s.src}
+              type="button"
+              onClick={() => setI(n)}
+              aria-label={`Go to piece ${n + 1}`}
+              aria-current={n === i ? "true" : undefined}
+              className={`h-1.5 cursor-pointer rounded-full transition-all duration-400 ${
+                n === i ? "w-7 bg-amber" : "w-1.5 bg-line hover:bg-mute"
+              }`}
+            />
+          ))}
+        </div>
+      }
     >
-      <div className="flex items-center justify-between gap-4 border-b border-line px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
-        <div className="min-w-0">
-          <h3 className="tracked truncate text-[0.68rem] text-chalk">
-            {collection.title}
-          </h3>
-          <p className="mt-1 text-[0.7rem] font-light tabular-nums text-mute">
-            {i + 1} / {shots.length}
-          </p>
-        </div>
-
-        <div className="flex shrink-0 items-center gap-2">
-          <a
-            href={collection.driveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden items-center gap-2 rounded-full border border-line px-4 py-2 text-[0.68rem] tracking-[0.14em] uppercase text-mute transition-colors hover:border-amber hover:text-amber sm:inline-flex"
-          >
-            Full archive
-            <ExternalIcon className="h-3.5 w-3.5" />
-          </a>
-          <button
-            type="button"
-            onClick={() => ref.current?.close()}
-            aria-label="Close gallery"
-            className="grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-line text-mute transition-colors hover:border-chalk hover:text-chalk"
-          >
-            <CloseIcon className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
       <div
         className="relative flex min-h-0 flex-1 items-center justify-center p-4 sm:p-10"
         onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
@@ -204,47 +194,11 @@ function GalleryDialog({
 
         {shots.length > 1 && (
           <>
-            <GalleryArrow side="left" onClick={() => go(-1)} />
-            <GalleryArrow side="right" onClick={() => go(1)} />
+            <LightboxArrow side="left" label="Previous piece" onClick={() => go(-1)} />
+            <LightboxArrow side="right" label="Next piece" onClick={() => go(1)} />
           </>
         )}
       </div>
-
-      <div className="flex justify-center gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
-        {shots.map((s, n) => (
-          <button
-            key={s.src}
-            type="button"
-            onClick={() => setI(n)}
-            aria-label={`Go to piece ${n + 1}`}
-            aria-current={n === i ? "true" : undefined}
-            className={`h-1.5 cursor-pointer rounded-full transition-all duration-400 ${
-              n === i ? "w-7 bg-amber" : "w-1.5 bg-line hover:bg-mute"
-            }`}
-          />
-        ))}
-      </div>
-    </dialog>
-  );
-}
-
-function GalleryArrow({
-  side,
-  onClick,
-}: {
-  side: "left" | "right";
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={side === "left" ? "Previous piece" : "Next piece"}
-      className={`absolute top-1/2 grid h-11 w-11 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-line bg-ink/70 text-mute backdrop-blur-sm transition-colors hover:border-chalk hover:text-chalk ${
-        side === "left" ? "left-2 sm:left-6" : "right-2 sm:right-6"
-      }`}
-    >
-      <ChevronIcon className={`h-5 w-5 ${side === "right" ? "rotate-180" : ""}`} />
-    </button>
+    </LightboxFrame>
   );
 }
